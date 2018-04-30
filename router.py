@@ -1,7 +1,14 @@
+import threading
 import logging
 
-class router():
-    def __init__(self, label, routing_table):
+logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-10s) %(message)s',)
+
+class Router(threading.Thread):
+    def __init__(self, group=None, target=None, name=None, args=(), kwargs=None, verbose=None):
+        threading.Thread.__init__(self, group=group, target=target, name=name, verbose=verbose)
         logging.debug('Thread initialized')
-        self.label = label
-        self.routing_table = routing_table
+        self.label = args[0]
+        self.routing_table = args[1]
+
+    def run(self):
+        logging.debug('running')

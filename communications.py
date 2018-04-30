@@ -1,6 +1,5 @@
-import threading
-import router
-import agent
+from router import Router
+from agent import Agent
 
 routing_table = {
         'A':   {'111': 0, 'B': 4,  'C': 3, 'E': 7},
@@ -22,7 +21,7 @@ def initialize_routers():
     labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'L']
 
     for r in labels:
-        new_router = threading.Thread(name=r, target=router, args=(r, routing_table))
+        new_router = Router(name=r, args=(r, routing_table))
         routers.append(new_router)
         new_router.start()
 
@@ -32,7 +31,10 @@ def initialize_agents():
              'Chan': '001',
              'Jan':  '100'}
 
-    for name, id in names.iteritems():
-        new_agent = threading.Thread(name=name, target=agent, args=(name, id, routing_table))
+    for agent_name, id in names.iteritems():
+        new_agent = Agent(name=agent_name, args=(agent_name, id, routing_table))
         agents.append(new_agent)
         new_agent.start()
+
+initialize_routers()
+initialize_agents()
