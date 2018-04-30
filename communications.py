@@ -42,3 +42,4 @@ def initialize_agents():
 
 routers = initialize_routers()
 agents = initialize_agents()
+

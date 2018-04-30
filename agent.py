@@ -1,7 +1,7 @@
 import threading
 import logging
 
-logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-10s) %(message)s',)
+logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-10s) %(message)s')
 
 class Agent(threading.Thread):
     def __init__(self, group=None, target=None, name=None, args=(), kwargs=None, verbose=None):
@@ -15,6 +15,15 @@ class Agent(threading.Thread):
         logging.debug('running')
         return
 
-    def send_message(self):
-        #TODO
-        return 1
+    def send_message(self, filename):
+        message = ''
+        with open(filename) as f:
+            for line in f:
+                do_something_with = line
+                #Do some shit
+
+        logging.debug('Message Sent: '+message)
+
+    def receive_message(self, message):
+        logging.debug('Message Received: '+message)
+        self.send_message('Some sort of acknowledgment')
