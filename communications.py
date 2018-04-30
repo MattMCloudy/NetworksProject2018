@@ -1,20 +1,6 @@
+import logging
 from router import Router
 from agent import Agent
-
-routing_table = {
-        'A':   {'111': 0, 'B': 4,  'C': 3, 'E': 7},
-        'B':   {'A': 4,   'C': 6,  'L': 5},
-        'C':   {'A': 3,   'B': 6,  'D': 11},
-        'D':   {'C': 11,  'G': 10, 'F': 6, 'L': 9},
-        'E':   {'001': 0, 'A': 7,  'G': 5},
-        'F':   {'100': 0, 'D': 6,  'L': 5},
-        'G':   {'D': 10,  'E': 5},
-        'H':   {'100': 0},
-        'L':   {'B': 5,   'D': 9,  'F': 5},
-        '111': {'A': 0},
-        '001': {'E': 0},
-        '100': {'F': 0,   'H': 0}
-    }
 
 def initialize_routers():
     routers = []
@@ -40,6 +26,20 @@ def initialize_agents():
 
     return agents
 
+logging.basicConfig(filename='debug.log', level=logging.DEBUG, format='(%(threadName)-10s) %(message)s')
+routing_table = {
+        'A':   {'111': 0, 'B': 4,  'C': 3, 'E': 7},
+        'B':   {'A': 4,   'C': 6,  'L': 5},
+        'C':   {'A': 3,   'B': 6,  'D': 11},
+        'D':   {'C': 11,  'G': 10, 'F': 6, 'L': 9},
+        'E':   {'001': 0, 'A': 7,  'G': 5},
+        'F':   {'100': 0, 'D': 6,  'L': 5},
+        'G':   {'D': 10,  'E': 5},
+        'H':   {'100': 0},
+        'L':   {'B': 5,   'D': 9,  'F': 5},
+        '111': {'A': 0},
+        '001': {'E': 0},
+        '100': {'F': 0,   'H': 0}
+    }
 routers = initialize_routers()
 agents = initialize_agents()
-
