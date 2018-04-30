@@ -14,3 +14,7 @@ class Agent(threading.Thread):
     def run(self):
         logging.debug('running')
         return
+
+    def send_message(self):
+        #TODO
+        return 1

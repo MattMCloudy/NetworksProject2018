@@ -25,6 +25,8 @@ def initialize_routers():
         routers.append(new_router)
         new_router.start()
 
+    return routers
+
 def initialize_agents():
     agents = []
     names = {'Ann':  '111',
@@ -36,5 +38,7 @@ def initialize_agents():
         agents.append(new_agent)
         new_agent.start()
 
-initialize_routers()
-initialize_agents()
+    return agents
+
+routers = initialize_routers()
+agents = initialize_agents()

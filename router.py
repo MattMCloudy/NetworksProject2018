@@ -12,3 +12,12 @@ class Router(threading.Thread):
 
     def run(self):
         logging.debug('running')
+        return
+
+    def listen(self):
+        #TODO
+        return 1
+
+    def route(self):
+        #TODO
+        return 1
