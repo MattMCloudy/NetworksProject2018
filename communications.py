@@ -1,13 +1,14 @@
 import logging
-from server import Server
-from client import Client
+from router import Router
+from agent import Agent
+from base import Base
 
 def initialize_routers():
     routers = []
-    labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'L']
+    labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'L']
 
     for r in labels:
-        new_router = Client(name=r, args=(r, routing_table))
+        new_router = Router(name=r, args=(r, routing_table))
         routers.append(new_router)
         new_router.start()
 
@@ -20,11 +21,16 @@ def initialize_agents():
              'Jan':  '100'}
 
     for agent_name, id in names.iteritems():
-        new_agent = Server(name=agent_name, args=(agent_name, id, routing_table))
+        new_agent = Agent(name=agent_name, args=(agent_name, id, routing_table))
         agents.append(new_agent)
         new_agent.start()
 
     return agents
+
+def initialize_base():
+    base = Base(name='H', args=('H', '101', routing_table))
+    base.start()
+    return base
 
 logging.basicConfig(filename='debug.log', level=logging.DEBUG, format='(%(threadName)-10s) %(message)s')
 routing_table = {
@@ -43,3 +49,4 @@ routing_table = {
     }
 routers = initialize_routers()
 agents = initialize_agents()
+base = initialize_base()
