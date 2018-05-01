@@ -2,6 +2,7 @@ import logging
 from router import Router
 from agent import Agent
 from base import Base
+from jan import Jan
 
 def initialize_routers():
     routers = []
@@ -17,13 +18,16 @@ def initialize_routers():
 def initialize_agents():
     agents = []
     names = {'Ann':  '111',
-             'Chan': '001',
-             'Jan':  '100'}
+             'Chan': '001'}
 
     for agent_name, id in names.iteritems():
         new_agent = Agent(name=agent_name, args=(agent_name, id, routing_table))
         agents.append(new_agent)
         new_agent.start()
+
+    jan = Jan(name='Jan', args=('Jan', '100', routing_table))
+    agents.append(jan)
+    jan.start()
 
     return agents
 
