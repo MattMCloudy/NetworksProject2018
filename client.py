@@ -1,6 +1,7 @@
 import threading
 import logging
 import time
+import socket
 
 class Client(threading.Thread):
     def __init__(self, group=None, target=None, name=None, args=(), kwargs=None, verbose=None):

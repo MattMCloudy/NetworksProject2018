@@ -1,6 +1,7 @@
 import threading
 import logging
 import time
+import socket
 
 class Server(threading.Thread):
     def __init__(self, group=None, target=None, name=None, args=(), kwargs=None, verbose=None):
@@ -17,32 +18,29 @@ class Server(threading.Thread):
         self.listen()
         return
 
-    def process_message(self, message):
-        #TODO
-        return 1
-
-    def send_message(self, filename):
-        message = ''
-        with open(filename) as f:
-            for line in f:
-                do_something_with = line
-                #Do some shit
-
-        logging.debug('Message Sent: '+message)
+    def process_messages(self, connection, address):
+        while True:
+            data = connection.recv(1024)
+            if not data:
+                break
+            else:
+                logging.debug('Data to be sent: ' + data)
+                connection.send(data)
+        connection.close()
 
     def listen(self):
-        logging.debug('Listening for incoming messages')
-        while(True):
-            self.lock.acquire()
-            if self.message_queue:
-                for message, i in enumerate(self.message_queue):
-                    logging.debug('Message Received: '+message)
-                    self.process_message(message)
-                    self.message_queue.remove(i)
-            self.lock.release
-            time.sleep(0.5)
+        host = ''
+        port = int(self.id)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind((host, port))
+        threads = []
 
-    def receive_message(self, message):
-        self.lock.acquire()
-        self.message_queue.append(message)
-        self.lock.release()
+        while True:
+            s.listen(1)
+            connection, address = s.accept()
+            logging.debug('Listening for incoming messages: '+address)
+            new_thread = threading.Thread(self.process_messages(connection, address))
+            threads.append(new_thread)
+
+        for t in threads:
+            t.join()
