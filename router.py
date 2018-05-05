@@ -1,5 +1,5 @@
-from client import Client
+from client_server import ClientServer
 
-class Router(Client):
-    def some_shit(self):
+class Router(ClientServer):
+    def process_messages(self, connection, address):
         return 1

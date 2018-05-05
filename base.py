@@ -1,5 +1,5 @@
-from server import Server
+from client_server import ClientServer
 
-class Base(Server):
-    def some_shit(self):
+class Base(ClientServer):
+    def process_messages(self, connection, address):
         return 1

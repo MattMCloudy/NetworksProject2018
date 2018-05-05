@@ -1,5 +1,5 @@
 from agent import Agent
 
 class Jan(Agent):
-    def more_shit(self):
+    def process_messages(self, connection, address)
         return 1

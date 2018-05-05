@@ -1,5 +1,4 @@
-from server import Server
-
-class Agent(Server):
-    def some_shit(self):
+from client_server import ClientServer
+class Agent(ClientServer):
+    def process_messages(self, connection, address):
         return 1
