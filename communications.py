@@ -21,7 +21,7 @@ def initialize_agents():
              'Chan': '001'}
 
     for agent_name, id in names.iteritems():
-        new_agent = Agent(name=agent_name, args=(agent_name, id, routing_table))
+        new_agent = Agent(name=agent_name, args=(agent_name, routing_table, id))
         agents.append(new_agent)
         new_agent.start()
 

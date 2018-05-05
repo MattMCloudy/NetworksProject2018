@@ -7,8 +7,8 @@ class ClientServer(threading.Thread):
     def __init__(self, group=None, target=None, name=None, args=(), kwargs=None, verbose=None):
         threading.Thread.__init__(self, group=group, target=target, name=name, verbose=verbose)
         self.name = args[0]
-        self.id = args[1]
-        self.routing_table = args[2]
+        self.routing_table = args[1]
+        self.id = args[2]
         self.sockets = {}
 
     def listen(self):
