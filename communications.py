@@ -9,7 +9,7 @@ def initialize_routers():
     labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'L']
 
     for r in labels:
-        new_router = Router(name=r, args=(r, routing_table))
+        new_router = Router(name=r, args=(r, routes, routing_table))
         routers.append(new_router)
         new_router.start()
 
@@ -17,26 +17,28 @@ def initialize_routers():
 
 def initialize_agents():
     agents = []
-    names = {'Ann':  '111',
-             'Chan': '001'}
-
-    for agent_name, id in names.iteritems():
-        new_agent = Agent(name=agent_name, args=(agent_name, routing_table, id))
+    names = ['Ann', 'Chan']
+    for name in names:
+        new_agent = Agent(name=name, args=(name, routes, routing_table))
         agents.append(new_agent)
         new_agent.start()
 
-    jan = Jan(name='Jan', args=('Jan', '100', routing_table))
+    jan = Jan(name='Jan', args=('Jan', routes, routing_table))
     agents.append(jan)
     jan.start()
 
     return agents
 
 def initialize_base():
-    base = Base(name='H', args=('H', '101', routing_table))
+    base = Base(name='H', args=('H', routes, routing_table))
     base.start()
     return base
 
 logging.basicConfig(filename='debug.log', level=logging.DEBUG, format='(%(threadName)-10s) %(message)s')
+routes = {'Ann': 111, 'Chan': 1, 'Jan': 100,
+          'A': 8000, 'B':8001, 'C': 8002,
+          'D': 8003, 'E': 8004, 'F': 8005,
+          'G': 8006, 'H': 100, 'L': 8007}
 routing_table = {
         'A':   {'111': 0, 'B': 4,  'C': 3, 'E': 7},
         'B':   {'A': 4,   'C': 6,  'L': 5},

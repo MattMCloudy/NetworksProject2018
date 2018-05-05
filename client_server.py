@@ -7,13 +7,13 @@ class ClientServer(threading.Thread):
     def __init__(self, group=None, target=None, name=None, args=(), kwargs=None, verbose=None):
         threading.Thread.__init__(self, group=group, target=target, name=name, verbose=verbose)
         self.name = args[0]
-        self.routing_table = args[1]
-        self.id = args[2]
+        self.routes = args[1]
+        self.routing_table = args[2]
         self.sockets = {}
 
     def listen(self):
         host = ''
-        port = int(self.id)
+        port = self.routes[self.name]
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind((host, port))
         threads = []
@@ -33,13 +33,10 @@ class ClientServer(threading.Thread):
         self.listen()
 
     def build_connections(self):
-        routes = {'Ann': 111, 'Chan': 1, 'Jan': 100, 'A': 8000, 'B':8001,
-                  'C': 8002, 'D': 8003, 'E': 8004, 'F': 8005, 'G': 8006,
-                  'H': 100, 'L': 8007}
         for name, dist in self.routing_table[self.name].items():
-            logging.debug('Connecting to '+name+' at port '+routes[name])
+            logging.debug('Connecting to '+name+' at port '+self.routes[name])
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.connect(routes[name])
+            s.connect(self.routes[name])
             self.sockets[name] = s
             logging.debug('Success')
 
