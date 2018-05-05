@@ -33,7 +33,7 @@ class ClientServer(threading.Thread):
         self.listen()
 
     def build_connections(self):
-        routes = {'Ann': 111, 'Chan': 001, 'Jan': 100, 'A': 8000, 'B':8001,
+        routes = {'Ann': 111, 'Chan': 1, 'Jan': 100, 'A': 8000, 'B':8001,
                   'C': 8002, 'D': 8003, 'E': 8004, 'F': 8005, 'G': 8006,
                   'H': 100, 'L': 8007}
         for name, dist in self.routing_table[self.name].items():
