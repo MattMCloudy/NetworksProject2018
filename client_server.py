@@ -29,14 +29,15 @@ class ClientServer(threading.Thread):
             t.join()
 
     def run(self):
-        self.build_connections()
         self.listen()
+        time.sleep(1)
+        self.build_connections()
 
     def build_connections(self):
         for name, dist in self.routing_table[self.name].items():
-            logging.debug('Connecting to '+name+' at port '+self.routes[name])
+            logging.debug('Connecting to '+name+' at port '+str(self.routes[name]))
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.connect(self.routes[name])
+            s.connect(('', self.routes[name]))
             self.sockets[name] = s
             logging.debug('Success')
 

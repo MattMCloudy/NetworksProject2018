@@ -53,6 +53,7 @@ routing_table = {
         'Chan': {'E': 0},
         'Jan': {'F': 0,   'H': 0}
     }
+
 routers = initialize_routers()
 agents = initialize_agents()
 base = initialize_base()
