@@ -2,6 +2,8 @@ import threading
 import socket
 import time
 import logging
+import json
+from packet import Packet
 
 class ClientServer(threading.Thread):
     def __init__(self, group=None, target=None, name=None, args=()):
@@ -9,6 +11,7 @@ class ClientServer(threading.Thread):
         self.name = args[0]
         self.routes = args[1]
         self.routing_table = args[2]
+        self.graph = args[3]
         self.sockets = {}
         self.log = logging.getLogger(self.name)
 

@@ -13,7 +13,7 @@ def initialize_routers():
     i = 0
 
     for r in labels:
-        new_router = Router(name=r, args=(r, routes, graph))
+        new_router = Router(name=r, args=(r, routes, routing_table, graph))
         new_router.daemon = True
         new_router.start()
         routers.append(new_router)
@@ -30,20 +30,20 @@ def initialize_agents():
     agents = []
     names = ['Ann', 'Chan']
     for name in names:
-        new_agent = Agent(name=name, args=(name, routes, routing_table))
+        new_agent = Agent(name=name, args=(name, routes, routing_table, graph))
         new_agent.daemon = True
         new_agent.start()
         agents.append(new_agent)
         time.sleep(1)
 
-    jan = Jan(name='Jan', args=('Jan', routes, routing_table))
+    jan = Jan(name='Jan', args=('Jan', routes, routing_table, graph))
     jan.start()
     agents.append(jan)
 
     return agents
 
 def initialize_base():
-    base = Base(name='H', args=('H', routes, routing_table))
+    base = Base(name='H', args=('H', routes, routing_table, graph))
     base.daemon = True
     base.start()
     return base
