@@ -1,4 +1,6 @@
 import logging
+import logging.config
+import time
 import subprocess
 from router import Router
 from agent import Agent
@@ -11,8 +13,10 @@ def initialize_routers():
 
     for r in labels:
         new_router = Router(name=r, args=(r, routes, routing_table))
-        routers.append(new_router)
+        new_router.daemon = True
         new_router.start()
+        routers.append(new_router)
+        time.sleep(1)
 
     return routers
 
@@ -21,17 +25,20 @@ def initialize_agents():
     names = ['Ann', 'Chan']
     for name in names:
         new_agent = Agent(name=name, args=(name, routes, routing_table))
-        agents.append(new_agent)
+        new_agent.daemon = True
         new_agent.start()
+        agents.append(new_agent)
+        time.sleep(1)
 
     jan = Jan(name='Jan', args=('Jan', routes, routing_table))
-    agents.append(jan)
     jan.start()
+    agents.append(jan)
 
     return agents
 
 def initialize_base():
     base = Base(name='H', args=('H', routes, routing_table))
+    base.daemon = True
     base.start()
     return base
 
@@ -39,7 +46,9 @@ def clean_routes():
     for name, route in routes.items():
         subprocess.Popen('lsof -t -i tcp:'+str(route)+'| xargs kill -9')
 
-logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-10s) %(message)s')
+logging.config.fileConfig('logging.conf')
+logging.getLogger('main')
+logging.debug('Logging Initiated')
 routes = {'Ann': 111, 'Chan': 1, 'Jan': 100,
           'A': 8000, 'B':8001, 'C': 8002,
           'D': 8003, 'E': 8004, 'F': 8005,
@@ -63,3 +72,4 @@ routing_table = {
 routers = initialize_routers()
 agents = initialize_agents()
 base = initialize_base()
+
