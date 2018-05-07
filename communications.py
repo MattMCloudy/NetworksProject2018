@@ -1,4 +1,5 @@
 import logging
+import subprocess
 from router import Router
 from agent import Agent
 from base import Base
@@ -34,11 +35,16 @@ def initialize_base():
     base.start()
     return base
 
-logging.basicConfig(filename='debug.log', level=logging.DEBUG, format='(%(threadName)-10s) %(message)s')
+def clean_routes():
+    for name, route in routes.items():
+        subprocess.Popen('lsof -t -i tcp:'+str(route)+'| xargs kill -9')
+
+logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-10s) %(message)s')
 routes = {'Ann': 111, 'Chan': 1, 'Jan': 100,
           'A': 8000, 'B':8001, 'C': 8002,
           'D': 8003, 'E': 8004, 'F': 8005,
-          'G': 8006, 'H': 100, 'L': 8007}
+          'G': 8006, 'H': 8007, 'L': 8008}
+#clean_routes()
 routing_table = {
         'A':   {'Ann': 0, 'B': 4,  'C': 3, 'E': 7},
         'B':   {'A': 4,   'C': 6,  'L': 5},

@@ -30,7 +30,7 @@ class ClientServer(threading.Thread):
 
     def run(self):
         self.listen()
-        time.sleep(1)
+        time.sleep(100)
         self.build_connections()
 
     def build_connections(self):
@@ -43,5 +43,5 @@ class ClientServer(threading.Thread):
 
     def process_messages(self, connection, address):
         #Method to be overridden by child classes
-        logging.debug('Generic process method exectued, Error')
+        logging.debug('Generic process method executed, Error')
         raise NotImplementedError
