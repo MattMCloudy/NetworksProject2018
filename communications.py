@@ -1,4 +1,3 @@
-import logging
 import logging.config
 import time
 import subprocess
@@ -47,7 +46,6 @@ def clean_routes():
         subprocess.Popen('lsof -t -i tcp:'+str(route)+'| xargs kill -9')
 
 logging.config.fileConfig('logging.conf')
-logging.getLogger('main')
 logging.debug('Logging Initiated')
 routes = {'Ann': 111, 'Chan': 1, 'Jan': 100,
           'A': 8000, 'B':8001, 'C': 8002,

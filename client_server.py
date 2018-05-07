@@ -1,7 +1,7 @@
 import threading
-import logging
 import socket
 import time
+import logging
 
 class ClientServer(threading.Thread):
     def __init__(self, group=None, target=None, name=None, args=()):
@@ -32,6 +32,7 @@ class ClientServer(threading.Thread):
             t.join()
 
     def run(self):
+        print('BOOOOP '+self.name)
         self.log.debug('new logger: '+self.name)
         listen_thread = threading.Thread(name='listen_'+self.name, target=self.listen)
         build_thread = threading.Thread(name='build_'+self.name, target=self.build_connections)
@@ -48,7 +49,7 @@ class ClientServer(threading.Thread):
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect(('', self.routes[name]))
             self.sockets[name] = s
-            logging.debug('Success')
+            self.log.debug('Success')
         self.log.debug('Finished building connections')
 
     def process_messages(self, connection, address):
