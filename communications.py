@@ -1,6 +1,7 @@
 import logging.config
 import time
 import subprocess
+from dijsktra import Graph
 from router import Router
 from agent import Agent
 from base import Base
@@ -9,12 +10,18 @@ from jan import Jan
 def initialize_routers():
     routers = []
     labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'L']
+    i = 0
 
     for r in labels:
-        new_router = Router(name=r, args=(r, routes, routing_table))
+        new_router = Router(name=r, args=(r, routes, graph))
         new_router.daemon = True
         new_router.start()
         routers.append(new_router)
+        g = Graph(8)
+        g.graph = graph
+        g.dijkstra(i, r)
+        i += 1
+
         time.sleep(1)
 
     return routers
@@ -66,6 +73,15 @@ routing_table = {
         'Chan': {'E': 0},
         'Jan': {'F': 0,   'H': 0}
     }
+
+graph = [[0,4, 3, 0,7,0, 0,0],
+                  [4,0, 6, 0,0,0, 0,5],
+                  [3,6, 0,11,0,0, 0,0],
+                  [0,0,11, 0,0,6,10,9],
+                  [7,0, 0, 0,0,0, 5,0],
+                  [0,0, 0, 6,0,0, 0,5],
+                  [0,0, 0,10,5,0, 0,0],
+                  [0,5, 0, 9,0,5, 0,0]]
 
 routers = initialize_routers()
 agents = initialize_agents()
