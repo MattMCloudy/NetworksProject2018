@@ -32,7 +32,6 @@ class ClientServer(threading.Thread):
             t.join()
 
     def run(self):
-        print('BOOOOP '+self.name)
         self.log.debug('new logger: '+self.name)
         listen_thread = threading.Thread(name='listen_'+self.name, target=self.listen)
         build_thread = threading.Thread(name='build_'+self.name, target=self.build_connections)
