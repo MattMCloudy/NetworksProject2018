@@ -7,11 +7,21 @@ class Graph():
         self.graph = [[0 for column in range(vertices)]
                       for row in range(vertices)]
 
-    def printSolution(self, dist, label):
+    def printSolution(self, dist, label, parent):
         labels = ['A','B','C','D','E','F','G','L']
         print ("Minimum Distance from Router", label)
         for node in range(self.V):
             print (labels[node],dist[node])
+            self.printPath(parent, node)
+
+    def printPath(self, parent, i):
+        if parent[i] == -1:
+            return
+
+        self.printPath(parent, parent[i])
+
+        print(" -> ", i)
+
 
     # A utility function to find the vertex with
     # minimum distance value, from the set of vertices
@@ -38,6 +48,9 @@ class Graph():
         dist = [sys.maxsize] * self.V
         dist[src] = 0
         sptSet = [False] * self.V
+        parent = [0,0,0,0,0,0,0,0]
+        parent[src] = -1
+
 
         for cout in range(self.V):
 
@@ -57,5 +70,6 @@ class Graph():
             for v in range(self.V):
                 if self.graph[u][v] > 0 and sptSet[v] == False and dist[v] > dist[u] + self.graph[u][v]:
                     dist[v] = dist[u] + self.graph[u][v]
+                    parent[v] = u
 
-        self.printSolution(dist, label)
+        self.printSolution(dist, label, parent)
