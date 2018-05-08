@@ -38,3 +38,10 @@ class Packet():
 
     def serialize(self):
         return json.dumps(self.__dict__)
+
+    def acknowledgement(self, recv_packet):
+        self.ACK = True
+        self.ack_num = recv_packet['seq_num']+1;
+        if recv_packet['ACK'] == True:
+            self.seq_num = recv_packet['ack_num']
+        return self.ACK

@@ -3,9 +3,9 @@ import time
 import subprocess
 from dijsktra import Graph
 from router import Router
-from agent import Agent
 from base import Base
 from jan import Jan
+from ann import Ann
 
 def initialize_routers():
     routers = []
@@ -28,15 +28,21 @@ def initialize_routers():
 
 def initialize_agents():
     agents = []
-    names = ['Ann', 'Chan']
-    for name in names:
-        new_agent = Agent(name=name, args=(name, routes, routing_table, graph))
-        new_agent.daemon = True
-        new_agent.start()
-        agents.append(new_agent)
-        time.sleep(1)
+
+    ann = Ann(name='Ann', args=('Ann', routes, routing_table, graph))
+    ann.daemon = True
+    ann.start()
+    agents.append(ann)
+    time.sleep(1)
+
+    chan = Chan(name='Chan', args=('Chan', routes, routing_table, graph))
+    chan.daemon = True
+    chan.start()
+    agents.append(chan)
+    time.sleep(1)
 
     jan = Jan(name='Jan', args=('Jan', routes, routing_table, graph))
+    jan.daemon = True
     jan.start()
     agents.append(jan)
 
