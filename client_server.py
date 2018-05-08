@@ -1,9 +1,8 @@
-import threading
-import socket
-import time
 import logging
-import json
-from packet import Packet
+import socket
+import threading
+import time
+
 
 class ClientServer(threading.Thread):
     def __init__(self, group=None, target=None, name=None, args=()):

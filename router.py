@@ -1,8 +1,16 @@
 import json
+from dijsktra import Graph
 from packet import Packet
 from client_server import ClientServer
 
 class Router(ClientServer):
+    def __init(self, name, args):
+        super(Router, self).__init__(name, args)
+        self.labels = ['A','B','C','D','E','F','G','L']
+        self.g_dict = {'Ann': 0, 'Chan': 4, 'Jan': 5}
+        self.inverse_agent_routes = {111: 'Ann', 1: 'Chan', 100: 'Jan'}
+        self.g = Graph(8).graph
+
     def process_messages(self, connection, address):
         while True:
             data_json = connection.recv(1024)
@@ -17,10 +25,6 @@ class Router(ClientServer):
 
         send = Packet()
         send.deserialize(message)
-        send.src_port = self.routes[self.name]
-        #TODO this is where we need to figure out the next port to send the packet
-
-        send.dest_port = self.routes['DESTINATION NAME']
 
         deliverable = send.serialize().encode()
-        self.sockets['DESTINATION NAME'].sendall(deliverable)
+        self.sockets[self.g.dijkstra(self.g_dict[self.inverse_agent_routes[send.src_port]], self.labels)].sendall(deliverable)
