@@ -6,6 +6,7 @@ from router import Router
 from base import Base
 from jan import Jan
 from ann import Ann
+from chan import Chan
 
 def initialize_routers():
     routers = []

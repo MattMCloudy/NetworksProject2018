@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import json
 from packet import Packet
 from client_server import ClientServer

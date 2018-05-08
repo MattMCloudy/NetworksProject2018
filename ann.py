@@ -1,11 +1,13 @@
+# coding: utf-8
+
 import json
 import logging
 from packet import Packet
 from client_server import ClientServer
 
 class Ann(ClientServer):
-    def __init__(self):
-        super.__init__()
+    def __init__(self, name, args):
+        super(Ann, self).__init__(name=name, args=args)
         self.chan_termination = 6
 
     def process_messages(self, connection, address):
