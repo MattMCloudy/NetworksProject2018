@@ -94,3 +94,6 @@ routers = initialize_routers()
 agents = initialize_agents()
 base = initialize_base()
 
+while 1:
+    time.sleep(10)
+    print('AHH AHH AHH AHH STAYIN ALIVE STAYING ALIVE')
