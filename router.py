@@ -6,7 +6,7 @@ from client_server import ClientServer
 class Router(ClientServer):
     def __init__(self, name, args):
         super(Router, self).__init__(name=name, args=args)
-        self.labels = ['A','B','C','D','E','F','G','L']
+        self.destinations = {111: 'Ann', 1: 'Chan', 100: 'Jan'}
 
     def process_messages(self, connection, address):
         while True:
@@ -24,67 +24,49 @@ class Router(ClientServer):
         send.deserialize(message)
 
         deliverable = send.serialize().encode()
-        print(self.labels)
+        dest = self.dijkstra(self.name, self.destinations[send.dest_port])
+        self.sockets[dest[1]].sendall(deliverable)
 
-        print(self.dijkstra(self.labels.index(self.name), self.labels))
-        self.sockets[self.labels[dest]].sendall(deliverable)
+    def dijkstra(self, start, end):
+        # We always need to visit the start
+        nodes_to_visit = {start}
+        visited_nodes = set()
+        # Distance from start to start is 0
+        distance_from_start = {start: 0}
+        tentative_parents = {}
 
-    def buildPath(self, parent, i, arr):
-        if parent[i] == -1:
-            return
+        while nodes_to_visit:
+            # The next node should be the one with the smallest weight
+            current = min(
+                [(distance_from_start[node], node) for node in nodes_to_visit]
+            )[1]
 
-        self.printPath(parent, parent[i], arr)
-        arr += [i]
-        print(arr)
+            # The end was reached
+            if current == end:
+                break
 
-    # A utility function to find the vertex with
-    # minimum distance value, from the set of vertices
-    # not yet included in shortest path tree
-    def minDistance(self, dist, sptSet):
+            nodes_to_visit.discard(current)
+            visited_nodes.add(current)
 
-        # Initilaize minimum distance for next node
-        min = sys.maxsize
+            edges = self.routing_table[current]
+            unvisited_neighbours = set(edges).difference(visited_nodes)
+            for neighbour in unvisited_neighbours:
+                neighbour_distance = distance_from_start[current] + \
+                                     edges[neighbour]
+                if neighbour_distance < distance_from_start.get(neighbour,
+                                                                float('inf')):
+                    distance_from_start[neighbour] = neighbour_distance
+                    tentative_parents[neighbour] = current
+                    nodes_to_visit.add(neighbour)
 
-        # Search not nearest vertex not in the
-        # shortest path tree
-        for v in range(8):
-            if dist[v] < min and sptSet[v] == False:
-                min = dist[v]
-                min_index = v
+        return self.deconstruct_path(tentative_parents, end)
 
-        return min_index
-
-    # Funtion that implements Dijkstra's single source
-    # shortest path algorithm for a graph represented
-    # using adjacency matrix representation
-    def dijkstra(self, src, label):
-
-        dist = [sys.maxsize] * 8
-        dist[src] = 0
-        sptSet = [False] * 8
-        parent = [0, 0, 0, 0, 0, 0, 0, 0]
-        parent[src] = -1
-
-        for cout in range(8):
-
-            # Pick the minimum distance vertex from
-            # the set of vertices not yet processed.
-            # u is always equal to src in first iteration
-            u = self.minDistance(dist, sptSet)
-
-            # Put the minimum distance vertex in the
-            # shotest path tree
-            sptSet[u] = True
-
-            # Update dist value of the adjacent vertices
-            # of the picked vertex only if the current
-            # distance is greater than new distance and
-            # the vertex in not in the shotest path tree
-            for v in range(8):
-                if self.graph[u][v] > 0 and sptSet[v] == False and dist[v] > dist[u] + self.graph[u][v]:
-                    dist[v] = dist[u] + self.graph[u][v]
-                    parent[v] = u
-
-        result = []
-        self.buildPath(parent, src, result)
-        return result
+    def deconstruct_path(self, tentative_parents, end):
+        if end not in tentative_parents:
+            return None
+        cursor = end
+        path = []
+        while cursor:
+            path.append(cursor)
+            cursor = tentative_parents.get(cursor)
+        return list(reversed(path))
