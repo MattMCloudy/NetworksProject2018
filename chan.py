@@ -1,12 +1,13 @@
 import logging
 import json
+from packet import Packet
 from client_server import ClientServer
 
 class Chan(ClientServer):
     def process_messages(self, connection, address):
         while True:
             data_json = connection.recv(1024)
-            if not data: break
+            if not data_json: break
             data = json.loads(data_json.decode())
             self.log.debug('Message received from: '+data['actor'])
             self.message_received(data)
@@ -17,5 +18,13 @@ class Chan(ClientServer):
 
         if message['TER'] == True:
             self.log.debug('Communication with Ann Terminated...')
-            
+
+    def send_messgae(self, message, destination):
+        send = Packet(src_port=self.routes['Chan'], dest_port=self.routes[destination])
+        send.data = message
+        send.actor = 'Chan'
+        self.log.debug('Message from Chan to be delivered to '+destination)
+        deliverable = send.serialize().encode()
+        self.sockets['E'].sendall(deliverable)
+
 

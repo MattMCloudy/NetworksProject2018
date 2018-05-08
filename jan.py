@@ -24,3 +24,18 @@ class Jan(ClientServer):
             send.auth_code = message['auth_code']
             deliverable = send.serialize().encode()
             self.sockets['H'].sendall(deliverable)
+
+    def send_message(self, message, destination):
+        send = Packet(src_port=self.routes['Jan'], dest_port=self.routes[destination])
+        send.data = message
+        send.actor = 'Jan'
+
+        if 'FIN' in message or message == 'Goodbye.':
+            send.FIN = True
+
+        if 'CONGRATULATIONS WE FRIED DRY GREEN LEAVES' in message:
+            send.URG = True
+
+        self.log.debug('Message from Jan to be delivered to '+destination)
+        deliverable = send.serialize().encode()
+        self.sockets['F'].sendall(deliverable)

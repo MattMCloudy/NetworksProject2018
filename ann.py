@@ -13,7 +13,7 @@ class Ann(ClientServer):
     def process_messages(self, connection, address):
         while True:
             data_json = connection.recv(1024)
-            if not data: break
+            if not data_json: break
             data = json.loads(data_json.decode())
             self.log.debug('Message received from: '+data['actor'])
             self.message_received(data)
@@ -59,3 +59,11 @@ class Ann(ClientServer):
             self.log.debug('Sending packet to Router A')
             deliverable = send.serialize().encode()
             self.sockets['A'].sendall(deliverable)
+
+    def send_message(self, message, destination):
+        send = Packet(src_port=self.routes['Ann'], dest_port=self.routes[destination])
+        send.data = message
+        send.actor = 'Ann'
+        self.log.debug('Message from Ann to be delivered to ' + destination)
+        deliverable = send.serialize().encode()
+        self.sockets['A'].sendall(deliverable)

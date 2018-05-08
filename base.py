@@ -6,7 +6,7 @@ class Base(ClientServer):
     def process_messages(self, connection, address):
         while True:
             data_json = connection.recv(1024)
-            if not data: break
+            if not data_json: break
             data = json.loads(data_json.decode())
             self.log.debug('Message received from: '+data['actor'])
             self.message_received(data)

@@ -95,5 +95,6 @@ agents = initialize_agents()
 base = initialize_base()
 
 while 1:
-    time.sleep(10)
+    time.sleep(15)
+    agents[0].send_message('YO WHADDUP FAM', 'Chan')
     print('AHH AHH AHH AHH STAYIN ALIVE STAYING ALIVE')
