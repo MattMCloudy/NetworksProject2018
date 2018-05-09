@@ -1,8 +1,9 @@
 import json
+from random import randint
 
 class Packet():
     def __init__(self, src_port=None, dest_port=None, actor=None,
-                 data=None, auth_code=None, seq_num=None, ack_num=None,
+                 data=None, auth_code=None, seq_num=randint(1000, 9999), ack_num=None,
                  DRP=False, TER=False, URG=False, ACK=False, RST=False,
                  SYN=False, FIN=False):
         self.src_port = src_port
@@ -40,8 +41,10 @@ class Packet():
         return json.dumps(self.__dict__)
 
     def acknowledgement(self, recv_packet):
+        self.deserialize(recv_packet)
         self.ACK = True
+        self.src_port = recv_packet['dest_port']
+        self.dest_port = recv_packet['src_port']
         self.ack_num = recv_packet['seq_num']+1;
         if recv_packet['ACK'] == True:
             self.seq_num = recv_packet['ack_num']
-        return self.ACK

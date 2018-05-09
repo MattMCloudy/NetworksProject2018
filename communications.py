@@ -1,7 +1,8 @@
 import logging.config
 import time
 import subprocess
-from dijsktra import Graph
+import sys
+import atexit
 from router import Router
 from base import Base
 from jan import Jan
@@ -18,11 +19,6 @@ def initialize_routers():
         new_router.daemon = True
         new_router.start()
         routers.append(new_router)
-        g = Graph(8)
-        g.graph = graph
-        g.dijkstra(i, r)
-        i += 1
-
         time.sleep(1)
 
     return routers
@@ -59,6 +55,18 @@ def clean_routes():
     for name, route in routes.items():
         subprocess.Popen('lsof -t -i tcp:'+str(route)+'| xargs kill -9')
 
+@atexit.register
+def shutdown():
+    logging.debug('Shutting Down...')
+    for router in routers:
+        router.shutdown()
+
+    for agent in agents:
+        agent.shutdown()
+
+    base.shutdown()
+    print('Communications Terminated')
+
 logging.config.fileConfig('logging.conf')
 logging.debug('Logging Initiated')
 routes = {'Ann': 111, 'Chan': 1, 'Jan': 100,
@@ -93,8 +101,16 @@ graph = [[0,4, 3, 0,7,0, 0,0],
 routers = initialize_routers()
 agents = initialize_agents()
 base = initialize_base()
+agent_dict = {'Ann': 0, 'Chan': 1, 'Jan': 2}
 
+print('Initializing...')
+time.sleep(15)
 while 1:
-    time.sleep(15)
-    agents[0].send_message('YO WHADDUP FAM', 'Chan')
-    print('AHH AHH AHH AHH STAYIN ALIVE STAYING ALIVE')
+    src_agent = input('Sender: ')
+    dest_agent = input('Receiver: ')
+    message = input('Message: ')
+
+    if src_agent == 'q' or dest_agent == 'q' or message == 'q':
+        sys.exit(0)
+
+    agents[agent_dict[src_agent]].send_message(message, dest_agent)

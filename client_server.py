@@ -4,6 +4,7 @@ import threading
 import time
 
 
+
 class ClientServer(threading.Thread):
     def __init__(self, group=None, target=None, name=None, args=()):
         threading.Thread.__init__(self, group=group, target=target, name=name)
@@ -13,6 +14,7 @@ class ClientServer(threading.Thread):
         self.graph = args[3]
         self.sockets = {}
         self.log = logging.getLogger(self.name)
+        self.shutdown_event = threading.Event()
 
     def listen(self):
         host = ''
@@ -22,7 +24,7 @@ class ClientServer(threading.Thread):
         s.bind((host, port))
         threads = []
 
-        while True:
+        while not self.shutdown_event.isSet():
             s.listen(1)
             connection, address = s.accept()
             self.log.debug('Listening for incoming messages: '+str(address[1]))
@@ -52,6 +54,12 @@ class ClientServer(threading.Thread):
             self.sockets[name] = s
             self.log.debug('Success')
         self.log.debug('Finished building connections')
+
+    def shutdown(self):
+        for name, socket in self.sockets.items():
+            socket.shutdown(0)
+            socket.close()
+        self.shutdown_event.set()
 
     def process_messages(self, connection, address):
         #Method to be overridden by child classes

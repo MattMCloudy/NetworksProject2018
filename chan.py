@@ -1,5 +1,6 @@
 import logging
 import json
+import sys
 from packet import Packet
 from client_server import ClientServer
 
@@ -17,9 +18,21 @@ class Chan(ClientServer):
         self.log.debug('Message data: '+message['data'])
 
         if message['TER'] == True:
-            self.log.debug('Communication with Ann Terminated...')
+            self.log.debug('CommunicationTerminated...')
+            sys.exit(0)
 
-    def send_messgae(self, message, destination):
+        if message['ACK'] == True:
+            self.log.debug('Acknowledgment received')
+            return
+
+        self.log.debug('Returning acknowledgment')
+        send = Packet()
+        send.acknowledgement(message)
+        send.actor = 'Chan'
+        deliverable = send.serialize().encode()
+        self.sockets['E'].sendall(deliverable)
+
+    def send_message(self, message, destination):
         send = Packet(src_port=self.routes['Chan'], dest_port=self.routes[destination])
         send.data = message
         send.actor = 'Chan'

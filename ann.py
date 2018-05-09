@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import json
-import logging
+import sys
 from packet import Packet
 from client_server import ClientServer
 
@@ -22,12 +22,17 @@ class Ann(ClientServer):
     def message_received(self, message):
         self.log.debug('Message data: '+message['data'])
 
+        if message['TER'] == True:
+            self.log.debug('Terminating Communications...')
+            sys.exit(0)
+
         if message['actor'] == 'Chan':
             self.chan_termination -= 1
             if self.chan_termination <= 0:
                 message['RST'] = True
         elif message['FIN'] == True or message['data'] == 'Okay Goodbye' or 'FIN' in message['data']:
             self.log.debug('Ann connection terminated')
+            sys.exit(0)
 
         #Send new packet in response
         send = Packet(src_port=self.routes['Ann'], dest_port=self.routes[message['actor']])
@@ -45,6 +50,8 @@ class Ann(ClientServer):
         else:
             #Acknowledge packet, check for urgent phrases, accept message input
             send.acknowledgement(message)
+            self.log.debug('Returning acknowledgment')
+
             if '32° 43’ 22.77” N,97° 9’ 7.53” W' in message['data']:
                 send.URG = True
                 send.auth_code = 'PEPPER THE PEPPER'
