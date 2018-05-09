@@ -48,3 +48,7 @@ class Packet():
         self.ack_num = recv_packet['seq_num']+1;
         if recv_packet['ACK'] == True:
             self.seq_num = recv_packet['ack_num']
+
+    def pretty_print(self):
+        for k, v in self.__dict__.items():
+            print('Detailed Information: Packet Key ' + k + ' Has Value ' + str(v))

@@ -29,6 +29,7 @@ class Chan(ClientServer):
         send = Packet()
         send.acknowledgement(message)
         send.actor = 'Chan'
+        send.pretty_print()
         deliverable = send.serialize().encode()
         self.sockets['E'].sendall(deliverable)
 
@@ -37,6 +38,7 @@ class Chan(ClientServer):
         send.data = message
         send.actor = 'Chan'
         self.log.debug('Message from Chan to be delivered to '+destination)
+        send.pretty_print()
         deliverable = send.serialize().encode()
         self.sockets['E'].sendall(deliverable)
 

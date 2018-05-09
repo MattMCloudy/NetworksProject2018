@@ -64,6 +64,7 @@ class Ann(ClientServer):
 
             send.actor = 'Ann'
             self.log.debug('Sending packet to Router A')
+            send.pretty_print()
             deliverable = send.serialize().encode()
             self.sockets['A'].sendall(deliverable)
 
@@ -72,5 +73,6 @@ class Ann(ClientServer):
         send.data = message
         send.actor = 'Ann'
         self.log.debug('Message from Ann to be delivered to ' + destination)
+        send.pretty_print()
         deliverable = send.serialize().encode()
         self.sockets['A'].sendall(deliverable)

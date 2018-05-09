@@ -50,5 +50,6 @@ class Jan(ClientServer):
             send.URG = True
 
         self.log.debug('Message from Jan to be delivered to '+destination)
+        send.pretty_print()
         deliverable = send.serialize().encode()
         self.sockets['F'].sendall(deliverable)

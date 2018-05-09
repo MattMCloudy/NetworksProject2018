@@ -114,3 +114,4 @@ while 1:
         sys.exit(0)
 
     agents[agent_dict[src_agent]].send_message(message, dest_agent)
+    time.sleep(10)
